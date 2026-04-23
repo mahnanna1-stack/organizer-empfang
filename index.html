@@ -8,115 +8,175 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --deep:     #3d6b58;
-    --mid:      #5f8c76;
-    --light:    #9dbdad;
-    --pale:     #d4e6de;
-    --cream:    #f5f2ed;
-    --parchment:#eee9e0;
-    --text:     #2c3e35;
-    --muted:    #7a9185;
+    --deep:      #3d6b58;
+    --mid:       #5f8c76;
+    --light:     #9dbdad;
+    --pale:      #d4e6de;
+    --cream:     #f5f2ed;
+    --parchment: #eee9e0;
+    --text:      #2c3e35;
+    --muted:     #7a9185;
+
+    /* Sidebar intrinsic sizing */
+    --sidebar-w:        180px;
+    --sidebar-v-pad:    32px;   /* equal space top and bottom */
+    --logo-font-size:   18px;
+    --logo-pb:          20px;
+    --section-pt:       14px;
+    --section-pb:       4px;
+    --section-font:     9px;
+    --link-py:          9px;
+    --link-font:        14px;
+    --divider-h:        1px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
     background: var(--cream);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 24px;
     font-family: Georgia, serif;
   }
 
-  .wrapper {
+  /* ══════════════════════════════════════
+     Page fits the sidebar height exactly.
+     The sidebar uses padding-top = padding-bottom = --sidebar-v-pad.
+     All other columns match that height.
+  ══════════════════════════════════════ */
+  .page {
+    display: inline-grid;              /* shrink-wrap to content height */
+    grid-template-columns: var(--sidebar-w) 1.6fr 1fr;
     width: 100%;
-    max-width: 620px;
-    animation: fadeUp .8s ease both;
+    /* height is driven by sidebar content + equal vertical padding */
   }
 
-  /* ── Greeting ── */
-  .greeting {
-    text-align: center;
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--parchment);
+    border-right: 1px solid var(--pale);
+    display: flex;
+    flex-direction: column;
+    padding: var(--sidebar-v-pad) 0;   /* equal top & bottom */
+  }
+
+  .sidebar-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: var(--logo-font-size);
+    font-weight: 400;
+    color: var(--deep);
+    letter-spacing: 1px;
+    padding: 0 18px var(--logo-pb);
+    border-bottom: 1px solid var(--pale);
+    margin-bottom: 4px;
+  }
+
+  .sidebar-section {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 13px;
-    letter-spacing: 5px;
+    font-size: var(--section-font);
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--light);
-    margin-bottom: 16px;
+    padding: var(--section-pt) 18px var(--section-pb);
   }
 
-  /* ── Clock ── */
-  .clock { text-align: center; margin-bottom: 44px; }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: var(--link-py) 18px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: var(--link-font);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: background .15s, border-color .15s, color .15s;
+    letter-spacing: .3px;
+  }
+  .nav-link:hover {
+    background: var(--pale);
+    border-left-color: var(--mid);
+    color: var(--deep);
+  }
+  .nav-link.active {
+    background: var(--pale);
+    border-left-color: var(--deep);
+    color: var(--deep);
+  }
+  .nav-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
 
+  /* ── Clock column – matches sidebar height via align-items stretch ── */
+  .col-clock {
+    border-right: 1px solid var(--pale);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--sidebar-v-pad) 36px;
+  }
+
+  .greeting {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 8px;
+  }
   .clock-time {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(60px, 14vw, 88px);
+    font-size: clamp(72px, 9vw, 108px);
     font-weight: 300;
     color: var(--deep);
     letter-spacing: -2px;
     line-height: 1;
     margin-bottom: 8px;
   }
-  .clock-time .colon {
-    animation: blink 1s step-end infinite;
-    opacity: .9;
-  }
-  .clock-time .seconds {
-    font-size: .38em;
+  .colon { animation: blink 1s step-end infinite; }
+  .seconds {
+    font-size: .34em;
     color: var(--light);
     vertical-align: super;
-    margin-left: 4px;
+    margin-left: 3px;
     font-weight: 300;
   }
   .clock-date {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 14px;
-    letter-spacing: 3px;
+    font-size: 12px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--muted);
+    margin-bottom: 28px;
   }
-
-  /* ── Quick links ── */
-  .links {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 44px;
+  .divider-line {
+    width: 36px; height: 1px;
+    background: var(--pale);
+    margin-bottom: 22px;
   }
-  .link-chip {
-    background: #fff;
-    border: 1px solid var(--pale);
-    border-radius: 10px;
-    padding: 9px 20px;
+  .quote {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--mid);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    transition: border-color .2s, box-shadow .2s;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .link-chip:hover {
-    border-color: var(--light);
-    box-shadow: 0 2px 12px #d4e6de66;
-    color: var(--deep);
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 240px;
   }
 
-  /* ── Word card ── */
-  .word-card {
-    background: var(--parchment);
-    border-radius: 16px;
-    padding: 30px 34px;
-    margin-bottom: 40px;
-    position: relative;
-    box-shadow: 0 2px 24px #d4e6de44;
+  /* ── Word column – shifted right with more left padding ── */
+  .col-word {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--sidebar-v-pad) 32px var(--sidebar-v-pad) 48px; /* extra left pad */
+    overflow: hidden;
+  }
+
+  .word-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-shrink: 0;
   }
   .word-label {
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -124,150 +184,222 @@
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--light);
-    margin-bottom: 18px;
   }
-  .word-header {
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid var(--pale);
+    border-radius: 20px;
+    padding: 4px 13px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    transition: border-color .2s, color .2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .refresh-btn:hover:not(:disabled) { border-color: var(--mid); color: var(--deep); }
+  .refresh-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .refresh-icon { display: inline-block; }
+  .refresh-btn.spinning .refresh-icon { animation: spin .6s linear infinite; }
+
+  .word-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .word-skeleton {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 14px;
+    animation: pulse 1.4s ease infinite;
+  }
+  .word-title-row {
     display: flex;
     align-items: baseline;
-    gap: 12px;
-    margin-bottom: 6px;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
   }
   .word-title {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 34px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--deep);
     line-height: 1.1;
   }
   .word-pos {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 14px;
+    font-size: 13px;
     font-style: italic;
     color: var(--light);
   }
   .word-origin {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--light);
-    letter-spacing: .5px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .word-meaning {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text);
     line-height: 1.7;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   .word-example {
     border-left: 2px solid var(--pale);
-    padding-left: 16px;
+    padding-left: 13px;
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 15px;
+    font-size: 13px;
     font-style: italic;
     color: var(--muted);
+    line-height: 1.55;
   }
-  .word-skeleton {
-    text-align: center;
-    padding: 24px 0;
-    color: var(--muted);
-    font-style: italic;
-    letter-spacing: 1px;
-    font-size: 14px;
-  }
-  .refresh-btn {
-    position: absolute;
-    top: 26px;
-    right: 26px;
-    background: transparent;
-    border: 1px solid var(--pale);
-    border-radius: 20px;
-    padding: 4px 14px;
+  .word-counter {
+    margin-top: 14px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 11px;
+    color: var(--light);
     letter-spacing: 1px;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    transition: border-color .2s;
-  }
-  .refresh-btn:hover { border-color: var(--light); }
-  .refresh-btn:disabled { opacity: .4; cursor: default; }
-
-  /* ── Ornament ── */
-  .ornament {
-    text-align: center;
-    font-size: 18px;
-    letter-spacing: 10px;
-    color: var(--pale);
+    flex-shrink: 0;
+    min-height: 16px;
   }
 
-  /* ── Animations ── */
-  @keyframes blink { 50% { opacity: .1; } }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: none; }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: .5; }
-    50%       { opacity: 1; }
-  }
-  .loading-pulse { animation: pulse 1.4s ease infinite; }
+  @keyframes blink  { 50%     { opacity: .1; } }
+  @keyframes pulse  { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+  @keyframes spin   { to      { transform: rotate(360deg); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  .word-body.loaded { animation: fadeIn .3s ease both; }
 </style>
 </head>
 <body>
-<div class="wrapper">
+<div class="page">
 
-  <div class="greeting" id="greeting"></div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">🌿 Organizer</div>
 
-  <div class="clock">
+    <div class="sidebar-section">Bereiche</div>
+    <a class="nav-link active" href="https://www.notion.so/34bcea832ca981469e2efabf28f18063" target="_blank">
+      <span class="nav-icon">⌂</span> Überblick
+    </a>
+    <a class="nav-link" href="https://www.notion.so/34bcea832ca981e598bcee657c12c0c5" target="_blank">
+      <span class="nav-icon">📖</span> Studium
+    </a>
+    <a class="nav-link" href="https://www.notion.so/34bcea832ca981028ea7ff701850e769" target="_blank">
+      <span class="nav-icon">📋</span> Arbeit
+    </a>
+    <a class="nav-link" href="https://www.notion.so/34bcea832ca981f598f7de97190046e5" target="_blank">
+      <span class="nav-icon">🏡</span> Privat
+    </a>
+
+    <div class="sidebar-section">Planung</div>
+    <a class="nav-link" href="https://www.notion.so/34bcea832ca9813386d7e46048c9866e" target="_blank">
+      <span class="nav-icon">◷</span> Termine
+    </a>
+    <a class="nav-link" href="https://www.notion.so/882331a64a3f4414b63bc5c97e06b35f" target="_blank">
+      <span class="nav-icon">◎</span> Budget
+    </a>
+    <a class="nav-link" href="https://www.notion.so/c6ddabe463ad4f71a4dc38b10fa10d63" target="_blank">
+      <span class="nav-icon">◈</span> Anschaffungen
+    </a>
+  </aside>
+
+  <!-- Clock -->
+  <div class="col-clock">
+    <div class="greeting" id="greeting"></div>
     <div class="clock-time">
       <span id="hh">00</span><span class="colon">:</span><span id="mm">00</span><span class="seconds" id="ss">00</span>
     </div>
     <div class="clock-date" id="datestr"></div>
+    <div class="divider-line"></div>
+    <div class="quote" id="quote"></div>
   </div>
 
-  <div class="links">
-    <a class="link-chip" href="https://www.notion.so/34bcea832ca981e598bcee657c12c0c5" target="_blank">📖 Studium</a>
-    <a class="link-chip" href="https://www.notion.so/34bcea832ca981028ea7ff701850e769" target="_blank">📋 Arbeit</a>
-    <a class="link-chip" href="https://www.notion.so/34bcea832ca981f598f7de97190046e5" target="_blank">🏡 Privat</a>
-    <a class="link-chip" href="https://www.notion.so/882331a64a3f4414b63bc5c97e06b35f" target="_blank">◎ Budget</a>
-    <a class="link-chip" href="https://www.notion.so/34bcea832ca9813386d7e46048c9866e" target="_blank">◷ Termine</a>
+  <!-- Word of day -->
+  <div class="col-word">
+    <div class="word-header-row">
+      <div class="word-label">Fremdwort des Tages</div>
+      <button class="refresh-btn" id="refresh-btn" onclick="fetchWord()">
+        <span class="refresh-icon" id="refresh-icon">↻</span> neues Wort
+      </button>
+    </div>
+    <div class="word-body" id="word-body">
+      <div class="word-skeleton">wird gewählt …</div>
+    </div>
+    <div class="word-counter" id="word-counter"></div>
   </div>
-
-  <div class="word-card">
-    <div class="word-label">Fremdwort des Tages</div>
-    <div id="word-body"><div class="word-skeleton loading-pulse">wird gewählt …</div></div>
-    <button class="refresh-btn" id="refresh-btn" onclick="fetchWord()">↻ neu</button>
-  </div>
-
-  <div class="ornament">— ✦ —</div>
 
 </div>
-
 <script>
-  // ── Clock ──
   const DAYS   = ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
   const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const QUOTES = [
+    "Der beste Weg, die Zukunft vorherzusagen, ist, sie zu gestalten.",
+    "Ordnung ist die Freude geordneter Geister.",
+    "Wer kämpft, kann verlieren. Wer nicht kämpft, hat schon verloren.",
+    "Die Zeit, die man sich nimmt, ist die Zeit, die man hat.",
+    "Kleine Schritte führen zu großen Zielen.",
+    "Qualität ist kein Zufall.",
+    "Im Anfang war die Tat.",
+    "Alles Große ist einfach.",
+  ];
 
   function tick() {
-    const n = new Date();
-    const pad = x => String(x).padStart(2,"0");
-    document.getElementById("hh").textContent = pad(n.getHours());
-    document.getElementById("mm").textContent = pad(n.getMinutes());
-    document.getElementById("ss").textContent = pad(n.getSeconds());
+    const n = new Date(), p = x => String(x).padStart(2,"0");
+    document.getElementById("hh").textContent = p(n.getHours());
+    document.getElementById("mm").textContent = p(n.getMinutes());
+    document.getElementById("ss").textContent = p(n.getSeconds());
     document.getElementById("datestr").textContent =
       `${DAYS[n.getDay()]}, ${n.getDate()}. ${MONTHS[n.getMonth()]} ${n.getFullYear()}`;
     const h = n.getHours();
     document.getElementById("greeting").textContent =
       h < 12 ? "Guten Morgen" : h < 18 ? "Guten Tag" : "Guten Abend";
   }
-  tick();
-  setInterval(tick, 1000);
+  tick(); setInterval(tick, 1000);
 
-  // ── Word of the day ──
-  async function fetchWord() {
-    const btn  = document.getElementById("refresh-btn");
-    const body = document.getElementById("word-body");
+  document.getElementById("quote").textContent =
+    "» " + QUOTES[new Date().getDay() % QUOTES.length] + " «";
+
+  // ── No-repeat word logic ──
+  function getSeenWords() {
+    try { return JSON.parse(sessionStorage.getItem("seen_words") || "[]"); }
+    catch { return []; }
+  }
+  function addSeenWord(w) {
+    const seen = getSeenWords();
+    seen.push(w.toLowerCase());
+    if (seen.length > 60) seen.shift();
+    sessionStorage.setItem("seen_words", JSON.stringify(seen));
+  }
+  function hasSeenWord(w) {
+    return getSeenWords().includes(w.toLowerCase());
+  }
+
+  let fetchCount = 0;
+
+  async function fetchWord(attempt = 1) {
+    if (attempt > 6) { sessionStorage.removeItem("seen_words"); fetchWord(1); return; }
+
+    const btn     = document.getElementById("refresh-btn");
+    const body    = document.getElementById("word-body");
+    const counter = document.getElementById("word-counter");
+
     btn.disabled = true;
-    body.innerHTML = '<div class="word-skeleton loading-pulse">wird gewählt …</div>';
+    btn.classList.add("spinning");
+
+    if (attempt === 1) {
+      body.classList.remove("loaded");
+      body.innerHTML = '<div class="word-skeleton">wird gewählt …</div>';
+    }
+
+    const seen = getSeenWords();
+    const avoidNote = seen.length > 0
+      ? ` Vermeide unbedingt diese bereits gezeigten Wörter: ${seen.join(", ")}.`
+      : "";
 
     try {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -275,37 +407,53 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 300,
-          system: `Du bist ein präziser Sprachassistent. Antworte NUR mit einem JSON-Objekt, ohne Backticks, ohne Erklärungen. Format:
-{"wort":"...","wortart":"...","herkunft":"...","bedeutung":"...","beispiel":"..."}`,
+          max_tokens: 350,
+          system: `Antworte NUR mit einem JSON-Objekt, ohne Backticks, ohne Präambel. Format: {"wort":"...","wortart":"...","herkunft":"...","bedeutung":"...","beispiel":"..."}`,
           messages: [{
             role: "user",
-            content: `Gib mir ein interessantes, selten verwendetes deutsches Fremdwort für heute (${new Date().toLocaleDateString("de-DE")}). Wähle etwas Bildungsnahes, Elegantes – kein Alltagswort.`
+            content: `Gib mir ein interessantes, selten verwendetes deutsches Fremdwort. Bildungsnah, elegant – kein Alltagswort.${avoidNote} Wähle zufällig aus: Philosophie, Rhetorik, Recht, Literatur, Musik, Architektur, Naturwissenschaft.`
           }]
         })
       });
+
       const data = await res.json();
       const text = (data.content || []).find(b => b.type === "text")?.text || "";
       const w = JSON.parse(text.replace(/```json|```/g,"").trim());
+
+      if (hasSeenWord(w.wort) && attempt < 5) {
+        btn.classList.remove("spinning");
+        fetchWord(attempt + 1);
+        return;
+      }
+
+      addSeenWord(w.wort);
+      fetchCount++;
+
       body.innerHTML = `
-        <div class="word-header">
+        <div class="word-title-row">
           <span class="word-title">${w.wort}</span>
           <span class="word-pos">${w.wortart}</span>
         </div>
         <div class="word-origin">${w.herkunft}</div>
         <div class="word-meaning">${w.bedeutung}</div>
         <div class="word-example">» ${w.beispiel} «</div>`;
+      body.classList.add("loaded");
+      counter.textContent = fetchCount > 1 ? `${fetchCount} Wörter diese Sitzung` : "";
+
     } catch {
       body.innerHTML = `
-        <div class="word-header">
+        <div class="word-title-row">
           <span class="word-title">Serendipität</span>
           <span class="word-pos">Substantiv</span>
         </div>
         <div class="word-origin">Englisch (Horace Walpole, 1754)</div>
         <div class="word-meaning">Das glückliche Entdecken von etwas Wertvollem, das man nicht gesucht hat.</div>
         <div class="word-example">» Die Serendipität führte sie zu ihrer wichtigsten Erkenntnis. «</div>`;
+      body.classList.add("loaded");
     }
+
     btn.disabled = false;
+    btn.classList.remove("spinning");
   }
 
   fetchWord();
